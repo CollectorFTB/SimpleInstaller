@@ -2,11 +2,12 @@
 
 int main()
 {
-    LPCWSTR targetDirectory = L"C:\\temp\\dest";
-    std::vector<LPCWSTR> sourceFiles{ L"C:\\temp\\source\\New folder\\kakaai.txt", L"C:\\temp\\source\\b.txt", L"C:\\temp\\source\\a.txt" };
+    std::wstring targetDirectory = L"C:\\temp\\dest";
+    std::vector<std::wstring> sourceFiles{ L"C:\\temp\\source\\New folder\\file.txt", L"C:\\temp\\source\\b.txt", L"C:\\temp\\source\\a.txt" };
     
     try {
-        FileInstaller installer(targetDirectory, sourceFiles);
+        FileInstaller installer(targetDirectory);
+        installer.install(sourceFiles);
     }
     catch (const CreateDirectoryError& err) {
         std::wcout << L"An exception occured while creating directory" << err.mDirectoryName << std::endl;

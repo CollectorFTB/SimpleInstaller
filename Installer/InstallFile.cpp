@@ -1,8 +1,8 @@
 #include "InstallFile.h"
 
-void InstallFile::copyFile(void)
+void InstallFile::install(void)
 {
-	BOOL copyFileReturnCode = CopyFile(mSourcePath, mDestinationPath, !FAIL_IF_EXISTS);
+	BOOL copyFileReturnCode = CopyFile(mSourcePath.c_str(), mDestinationPath.c_str(), !FAIL_IF_EXISTS);
 
 	if (COPY_FAIL == copyFileReturnCode)
 	{
@@ -10,17 +10,11 @@ void InstallFile::copyFile(void)
 	}
 }
 
-InstallFile::InstallFile(LPCWSTR sourcePath, LPCWSTR destinationPath, std::shared_ptr<BOOL> completed): mCompleted(completed)
-{
-	wcscpy_s(mDestinationPath, destinationPath);
-	wcscpy_s(mSourcePath, sourcePath);
-	this->copyFile();
-}
-
+InstallFile::InstallFile(std::wstring sourcePath, std::wstring destinationPath, std::shared_ptr<BOOL> completed) : mDestinationPath(destinationPath), mSourcePath(sourcePath), mCompleted(completed) {}
 
 InstallFile::~InstallFile(void)
 {
 	if (!*this->mCompleted) {
-		DeleteFile(mDestinationPath);
+		DeleteFile(mDestinationPath.c_str());
 	}
 }

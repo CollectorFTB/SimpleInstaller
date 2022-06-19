@@ -11,14 +11,14 @@ const BOOL CREATE_DIRECTORY_FAIL = 0;
 class InstallDirectory
 {
 private:
-	WCHAR mTargetDirectory[MAX_PATH];
+	std::wstring mTargetDirectory;
 	BOOL mExistsBeforeInstallation = FALSE;
+	std::shared_ptr<BOOL> mCompleted;
 	
 public:
-	std::shared_ptr<BOOL> mCompleted;
-
-	LPCWSTR const getName(void) const;
-	InstallDirectory(LPCWSTR path, std::shared_ptr<BOOL> completed);
+	const std::wstring getName(void) const;
+	void createDirectory(void);
+	InstallDirectory(std::wstring path, std::shared_ptr<BOOL> completed);
 	~InstallDirectory(void);
 };
 

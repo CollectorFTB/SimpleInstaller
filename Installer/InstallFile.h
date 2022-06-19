@@ -12,14 +12,14 @@ const BOOL COPY_FAIL = 0;
 class InstallFile
 {
 private:
-	WCHAR mSourcePath[MAX_PATH];
-	WCHAR mDestinationPath[MAX_PATH];
-
-public:
+	std::wstring mSourcePath;
+	std::wstring mDestinationPath;
 	std::shared_ptr<BOOL> mCompleted;
 
-	void copyFile(void);
-	InstallFile(LPCWSTR sourcePath, LPCWSTR destinationPath, std::shared_ptr<BOOL> completed);
+public:
+	void install(void);
+
+	InstallFile(std::wstring sourcePath, std::wstring destinationPath, std::shared_ptr<BOOL> completed);
 	~InstallFile(void);
 };
 

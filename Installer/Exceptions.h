@@ -4,13 +4,13 @@
 
 class CopyFileError : public std::runtime_error {
 public:
-	WCHAR mFilePath[MAX_PATH];
-	CopyFileError(WCHAR filePath[MAX_PATH]) : std::runtime_error("") { wcscpy_s(mFilePath, filePath); }
+	std::wstring mFilePath;
+	CopyFileError(std::wstring filePath) : std::runtime_error("") { mFilePath = filePath; }
 };
 
 
 class CreateDirectoryError : public std::runtime_error {
 public:
-	WCHAR mDirectoryName[MAX_PATH];
-	CreateDirectoryError(WCHAR directoryName[MAX_PATH]) : std::runtime_error("") { wcscpy_s(mDirectoryName, directoryName); }
+	std::wstring mDirectoryName;
+	CreateDirectoryError(std::wstring directoryName) : std::runtime_error("") { mDirectoryName = directoryName; }
 };

@@ -11,11 +11,12 @@ class FileInstaller {
 private:
     std::unique_ptr<InstallDirectory> mTargetDirectory;
     std::vector<std::unique_ptr<InstallFile>> mInstallFiles;
-    void copyFiles(const std::vector<LPCWSTR>& sourceFiles);
-public:
+    void copyFiles(const std::vector<std::wstring>& sourceFiles);
     std::shared_ptr<BOOL> mCompleted;
+public:
+    void install(const std::vector<std::wstring>& sourceFiles);
 
-    FileInstaller(const LPCWSTR& targetDirectory, const std::vector<LPCWSTR>& sourceFiles);
+    FileInstaller(std::wstring targetDirectory);
     ~FileInstaller(void);
 };
 

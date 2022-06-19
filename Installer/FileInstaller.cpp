@@ -1,30 +1,36 @@
 #include "FileInstaller.h"
 
-void FileInstaller::copyFiles(const std::vector<LPCWSTR>& sourceFiles)
+void FileInstaller::copyFiles(const std::vector<std::wstring>& sourceFiles)
 {
-    WCHAR targetFilePath[MAX_PATH] = L"";
+    WCHAR targetFilePath[MAX_PATH];
     LPWSTR filename = nullptr;
 
+    std::wstring a;
     for (auto it = sourceFiles.begin(); it != sourceFiles.end(); ++it) {
         // Create the path and put it into targetFilePath
-        filename = PathFindFileName(*it);
-        PathCombine(targetFilePath, mTargetDirectory->getName(), filename);
+        filename = PathFindFileName((* it).c_str());
+        PathCombine(targetFilePath, mTargetDirectory->getName().c_str(), filename);
         
-        this->mInstallFiles.push_back(std::make_unique<InstallFile>(*it, targetFilePath, this->mCompleted));
+        auto file = std::make_unique<InstallFile>(*it, std::wstring(targetFilePath), this->mCompleted);
+        file->install();
+        this->mInstallFiles.push_back(std::move(file));
     }
-    
-    // If we reached here, all files were copied successfully
+}
+
+void FileInstaller::install(const std::vector<std::wstring>& sourceFiles) {
+    this->mTargetDirectory->createDirectory();
+    this->copyFiles(sourceFiles);
+
+    // If we reached here, installer finished successfully
     *this->mCompleted = TRUE;
 }
 
-
-FileInstaller::FileInstaller(const LPCWSTR& targetDirectory, const std::vector<LPCWSTR>& sourceFiles)
+FileInstaller::FileInstaller(std::wstring targetDirectory)
 {
     // Shared pointer to keep track of whether the program finished successfully or not
     this->mCompleted = std::make_shared<BOOL>(FALSE);
 
     mTargetDirectory = std::make_unique<InstallDirectory>(targetDirectory, this->mCompleted);
-    this->copyFiles(sourceFiles);
 }
 
 FileInstaller::~FileInstaller(void)
