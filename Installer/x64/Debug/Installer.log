@@ -1,4 +1,6 @@
 ﻿  FileInstaller.cpp
   InstallDirectory.cpp
+  InstallFile.cpp
+  Installer.cpp
   Generating Code...
   Installer.vcxproj -> C:\Users\gilad\Desktop\FileCopier\Installer\x64\Debug\Installer.exe

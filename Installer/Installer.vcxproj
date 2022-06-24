@@ -134,6 +134,7 @@
     <ClCompile Include="Installer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbstractInstallable.h" />
     <ClInclude Include="InstallFile.h" />
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="FileInstaller.h" />

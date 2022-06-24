@@ -10,7 +10,7 @@
 class FileInstaller {
 private:
     std::unique_ptr<InstallDirectory> mTargetDirectory;
-    std::vector<std::unique_ptr<InstallFile>> mInstallFiles;
+    std::vector<std::unique_ptr<AbstractInstallable>> mInstallFiles;
     void copyFiles(const std::vector<std::wstring>& sourceFiles);
     std::shared_ptr<BOOL> mCompleted;
 public:

@@ -5,22 +5,34 @@ std::wstring const InstallDirectory::getName(void) const
 	return this->mTargetDirectory;
 }
 
-void InstallDirectory::createDirectory(void) {
+void InstallDirectory::install(void) {
 	BOOL createDirectoryReturnCode = TRUE;
-	this->mExistsBeforeInstallation = PathFileExists(mTargetDirectory.c_str());
+	BOOL existsBeforeInstallation = PathFileExists(mTargetDirectory.c_str());
 
-	if (!this->mExistsBeforeInstallation) {
+	if (!existsBeforeInstallation) {
 		createDirectoryReturnCode = CreateDirectory(mTargetDirectory.c_str(), INHERIT_SECURITY);
+		
 		if (CREATE_DIRECTORY_FAIL == createDirectoryReturnCode) {
 			throw CreateDirectoryError(mTargetDirectory);
 		}
+		else {
+			/* FIXES 4 (semi got fixed when fixing 1 and moving mCompleted there):
+			When installing an AbstractInstallable, by default it wont call uninstall() on the object if it didn't finish its installation
+			In the case of a directory, if the directory didn't exist before we didn't install it, so don't need to uninstall it
+			Only set this to TRUE if the directory creation succeeded
+
+			*/
+			this->mInstalled = TRUE;
+		}
 	}
 }
-InstallDirectory::InstallDirectory(std::wstring path, std::shared_ptr<BOOL> completed): mTargetDirectory(path), mCompleted(completed) {}
 
-InstallDirectory::~InstallDirectory(void)
-{
-	if (!*this->mCompleted && !this->mExistsBeforeInstallation) {
-		RemoveDirectory(mTargetDirectory.c_str());
+void InstallDirectory::uninstall(void) {
+	BOOL removeDirectoryReturnCode = TRUE;
+	removeDirectoryReturnCode = RemoveDirectory(this->mTargetDirectory.c_str());
+	if (FALSE == removeDirectoryReturnCode) // FIXES 3
+	{
+		std::wcout << L"Failed removing directory " << this->mTargetDirectory << std::endl;
 	}
+	this->mInstalled = FALSE;
 }

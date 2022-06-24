@@ -4,21 +4,22 @@
 #include <memory>
 
 #include "Exceptions.h"
+#include "AbstractInstallable.h"
 
 const LPSECURITY_ATTRIBUTES INHERIT_SECURITY = NULL;
 const BOOL CREATE_DIRECTORY_FAIL = 0;
 
-class InstallDirectory
+class InstallDirectory: public AbstractInstallable
 {
 private:
 	std::wstring mTargetDirectory;
-	BOOL mExistsBeforeInstallation = FALSE;
-	std::shared_ptr<BOOL> mCompleted;
-	
+
 public:
 	const std::wstring getName(void) const;
-	void createDirectory(void);
-	InstallDirectory(std::wstring path, std::shared_ptr<BOOL> completed);
-	~InstallDirectory(void);
+	virtual void install(void) override;
+	virtual void uninstall(void) override;
+
+	InstallDirectory(std::wstring path, std::shared_ptr<BOOL> completed): AbstractInstallable(completed), mTargetDirectory(path) {};
+	~InstallDirectory(void) { if (this->isCleanupNeeded()) { this->uninstall(); } };
 };
 

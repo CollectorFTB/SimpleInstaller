@@ -5,21 +5,22 @@
 #include <memory>
 
 #include "Exceptions.h"
+#include "AbstractInstallable.h"
 
 const BOOL FAIL_IF_EXISTS = TRUE;
 const BOOL COPY_FAIL = 0;
 
-class InstallFile
+class InstallFile: public AbstractInstallable
 {
 private:
 	std::wstring mSourcePath;
 	std::wstring mDestinationPath;
-	std::shared_ptr<BOOL> mCompleted;
 
 public:
-	void install(void);
+	virtual void install(void) override;
+	virtual void uninstall(void) override;
 
-	InstallFile(std::wstring sourcePath, std::wstring destinationPath, std::shared_ptr<BOOL> completed);
-	~InstallFile(void);
+	InstallFile(std::wstring sourcePath, std::wstring destinationPath, std::shared_ptr<BOOL> completed): AbstractInstallable(completed), mDestinationPath(destinationPath), mSourcePath(sourcePath) {};
+	~InstallFile(void) { if (this->isCleanupNeeded()) { this->uninstall(); } };
 };
 

@@ -8,13 +8,15 @@ void InstallFile::install(void)
 	{
 		throw CopyFileError(mSourcePath);
 	}
+	this->mInstalled = TRUE;
 }
 
-InstallFile::InstallFile(std::wstring sourcePath, std::wstring destinationPath, std::shared_ptr<BOOL> completed) : mDestinationPath(destinationPath), mSourcePath(sourcePath), mCompleted(completed) {}
-
-InstallFile::~InstallFile(void)
-{
-	if (!*this->mCompleted) {
-		DeleteFile(mDestinationPath.c_str());
+void InstallFile::uninstall(void) {
+	BOOL deleteFileReturnCode = TRUE;
+	deleteFileReturnCode = DeleteFile(this->mDestinationPath.c_str());
+	if (FALSE == deleteFileReturnCode) // FIXES 3
+	{
+		std::wcout << L"Failed deleting file " << this->mDestinationPath << std::endl;
 	}
+	this->mInstalled = FALSE;
 }

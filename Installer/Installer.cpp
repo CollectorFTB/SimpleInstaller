@@ -5,6 +5,9 @@ int main()
     std::wstring targetDirectory = L"C:\\temp\\dest";
     std::vector<std::wstring> sourceFiles{ L"C:\\temp\\source\\New folder\\file.txt", L"C:\\temp\\source\\b.txt", L"C:\\temp\\source\\a.txt" };
     
+    LPWSTR filename = PathFindFileName(targetDirectory.c_str());
+    LPCWSTR orig = targetDirectory.c_str();
+   
     try {
         FileInstaller installer(targetDirectory);
         installer.install(sourceFiles);
